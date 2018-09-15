@@ -31,9 +31,8 @@ class Game:
             if player is None:
                 player = Player(name)
                 self.players[name] = player
-            for (building, action) in inp.morning_actions:
-                if building in self.buildings:
-                    building.do(player, action)
+            
+            # TODO morning action
     
     def afternoon(self, inputs):
         for name, player in self.players.items():
@@ -49,8 +48,7 @@ class Game:
                     continue
             player.explore(dungeon)
             
-    def get_options(self, playername):
-        player = self.players[playername]
+    def get_options(self, player):
         return {
             dungeon.name: {
                     "action": dungeon.get_action(),
@@ -60,4 +58,24 @@ class Game:
                 for dungeon in self.dungeons.values()
                 if player.can_see(dungeon)}
     
+    def get_visible_data(self, playername):
+        if playername in self.players:
+            player = self.players[playername]
+        else:
+            player = Player(playername)
+        return {
+            "options": self.get_options(player),
+            "messages": player.get_messages(),
+            "health": player.health,
+            "maxhealth": player.maxhealth,
+            "coins": player.coins,
+            "lvl": player.lvl}
     
+    def tell_player(playername, message):
+        if playername not in self.players:
+            return False
+        self.player[playername].tell(message)
+        return True
+
+
+

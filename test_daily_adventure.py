@@ -11,7 +11,6 @@ def main():
     
     game = Game([Farm(), Bed()], default_dungeon="Bed")
     
-    print(game.save())
     
     
     inp = Input({
@@ -90,6 +89,7 @@ def main():
     assert options["Farm"]["available"]
     assert "Bed" in options
     assert options["Bed"]["available"]
+    
     
 
 

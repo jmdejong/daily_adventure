@@ -1,6 +1,6 @@
 
 
-class Player():
+class Player:
     
     def __init__(self, name):
         
@@ -11,6 +11,7 @@ class Player():
         self.maxhealth = 100
         self.health = self.maxhealth
         self.coins = 0
+        self.messages = []
         
     
     def morning(self, actions):
@@ -25,6 +26,12 @@ class Player():
     def can_see(self, dungeon):
         return dungeon.can_see(self)
     
+    def tell(self, message):
+        messages.append(message)
+    
+    def get_messages(self):
+        return self.messages
+    
     def save(self):
         return {
             "name": self.name,
@@ -34,3 +41,12 @@ class Player():
             "maxhealth": self.maxhealth,
             "coins": self.coins}
     
+    @classmethod
+    def load(cls, data):
+        p = Player(data["name"])
+        p.inv = data["inv"]
+        p.lvl = data["lvl"]
+        p.maxhealth = data["maxhealth"]
+        p.health = data["health"]
+        p.coins = data["coins"]
+        return p
