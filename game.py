@@ -20,7 +20,8 @@ class Game:
             }
     
     
-    def day(self, inputs):
+    def day(self, inputlist):
+        inputs = {inp.player: inp for inp in inputlist}
         self.morning(inputs)
         self.afternoon(inputs)
     
@@ -41,8 +42,8 @@ class Game:
                 dungeon = self.dungeons.get(inp.dungeon)
             else:
                 dungeon = None
-            if not dungeon or player.can_enter(dungeon):
-                if self.default_dungeon and not player.can_enter(self.default_dungeon):
+            if not dungeon or not player.can_enter(dungeon):
+                if self.default_dungeon and player.can_enter(self.default_dungeon):
                     dungeon = self.default_dungeon
                 else:
                     continue
@@ -55,7 +56,7 @@ class Game:
                     "action": dungeon.get_action(),
                     "description": dungeon.get_description(),
                     "available": player.can_enter(dungeon),
-                    "reason": dungeon.cannot_enter(player)}
+                    "reason": dungeon.entry_reason(player)}
                 for dungeon in self.dungeons.values()
                 if player.can_see(dungeon)}
     

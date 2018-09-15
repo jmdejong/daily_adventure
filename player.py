@@ -8,8 +8,8 @@ class Player():
         
         self.lvl = 0
         self.inv = []
-        self.health = 0
         self.maxhealth = 100
+        self.health = self.maxhealth
         self.coins = 0
         
     
@@ -20,10 +20,10 @@ class Player():
         dungeon.enter(self)
         
     def can_enter(self, dungeon):
-        return dungeon.cannot_enter(self) is False
+        return dungeon.can_enter(self)
     
     def can_see(self, dungeon):
-        not (dungeon.cannot_enter(self) is True)
+        return dungeon.can_see(self)
     
     def save(self):
         return {

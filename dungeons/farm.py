@@ -14,10 +14,10 @@ class Farm(Dungeon):
     
     
     
-    def cannot_enter(self, player):
+    def get_availability(self, player):
         if player.health < player.maxhealth:
-            return "You need to be completely fit to work on the farm. Give your wounds some rest"
-        return False
+            return Dungeon.unavailable("You need to be completely fit to work on the farm. Give your wounds some rest")
+        return Dungeon.available
     
     def enter(self, player):
         player.coins += self.wage

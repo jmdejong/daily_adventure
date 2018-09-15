@@ -2,14 +2,8 @@
 
 class Availability:
     
-    def __init__(self, available, visible, reason=""):
-        hidden = not visible
-        available = available
-        reason = reason
+    def __init__(self, visible, available, reason=None):
+        self.hidden = not visible
+        self.available = available
+        self.reason = reason
 
-
-hidden = Availability(False, False, "")
-available = Availability(True, True, "")
-
-def unavailable(reason):
-    return Availability(False, True, reason)
