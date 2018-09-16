@@ -93,14 +93,14 @@ def main():
     print("save game data")
     savedata = json.dumps(game.save())
     os.makedirs(os.path.dirname(savefile), exist_ok=True)
-    write_safe(savefile, savedata)
+    write_safe(savefile, savedata, mode=0o600)
     
     print("inform players")
     for playername in game.players:
         infofile = playerdatafiles.format(playername)
         data = json.dumps(game.get_visible_data(playername))
         os.makedirs(os.path.dirname(infofile), exist_ok=True)
-        write_safe(infofile, data)
+        write_safe(infofile, data, mode=0o600)
     
     print("clear input")
     try:
