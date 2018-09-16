@@ -3,16 +3,25 @@
 import sys
 import os
 import json
-import argparse
+#import argparse
 
 _dir = os.path.dirname(__file__)
 if _dir:
     os.chdir(_dir)
 
+
+commandname = sys.argv[1]
+
 welcometext = """
 Welcome to Daily Adventure
 You can set one action for the day. This will be executed at UTC midnight.
-You will then have to set a new command for the next day."""
+You will then have to set a new command for the next day.
+Run `{command} help` for instructions""".format(command=commandname)
+
+helptext = """
+Run `{command} report` or `{command}` for a full information listing.
+Run `{command} do <input>` to pick an action for the day, where <input> is either the name or the number of that action
+For example `{command} do Bed` or `{command} do 0`""".format(command=commandname)
 
 statustemplate = """
 health: {health} / {maxhealth}
@@ -75,28 +84,33 @@ def set_input(inp):
     
 
 def main():
-    parser = argparse.ArgumentParser(description="Daily Adventure game (frontend)")
-    parser.set_defaults(action="report")
-    subparsers = parser.add_subparsers()
+    #if sys.argv[1] == "_title"
+    #parser = argparse.ArgumentParser(description="Daily Adventure game (frontend)")
+    #parser.set_defaults(action="report")
+    #subparsers = parser.add_subparsers()
     
-    doparser = subparsers.add_parser("do")
-    doparser.add_argument("input")
-    doparser.set_defaults(action="do")
+    #doparser = subparsers.add_parser("do")
+    #doparser.add_argument("input")
+    #doparser.set_defaults(action="do")
     
-    def _aap(name):
-        subparser = subparsers.add_parser(name)
-        subparser.set_defaults(action=name)
-    _aap("welcome")
-    _aap("status")
-    _aap("messages")
-    _aap("options")
-    _aap("action")
-    _aap("report")
-    #parser.add_argument("action", nargs='?', default="status", choices=["welcome", "status", "messages", "options", "report"])
+    #def _aap(name):
+        #subparser = subparsers.add_parser(name)
+        #subparser.set_defaults(action=name)
+    #_aap("welcome")
+    #_aap("status")
+    #_aap("messages")
+    #_aap("options")
+    #_aap("action")
+    #_aap("report")
+    ##parser.add_argument("action", nargs='?', default="status", choices=["welcome", "status", "messages", "options", "report"])
     
-    args = parser.parse_args()
+    #args = parser.parse_args()
     
-    action = args.action
+    #action = args.action
+    if len(sys.argv) >= 3:
+        action = sys.argv[2]
+    else:
+        action = "report"
     if action == "welcome":
         print(welcometext)
     elif action == "status":
@@ -113,6 +127,8 @@ def main():
         print(actiontext)
         print(messagestext)
         print(optiontext)
+    elif action == "help" or action == "-h" or action == "--help":
+        print(helptext)
     elif action == "do":
         set_input(args.input)
         
