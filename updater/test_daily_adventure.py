@@ -13,10 +13,7 @@ def main():
     
     
     
-    inp = Input({
-        "player": "troido",
-        "morning": [],
-        "dungeon": "Farm"})
+    inp = Input("troido", "", "Farm")
     inputs = [inp]
     
     
@@ -29,7 +26,7 @@ def main():
     assert players[0]["name"] == "troido"
     assert players[0]["health"] == 100
     assert players[0]["coins"] == 10
-    options = game.get_options("troido")
+    options = game.get_visible_data("troido")["options"]
     assert "Farm" in options
     assert options["Farm"]["available"]
     assert "Bed" in options
@@ -38,7 +35,7 @@ def main():
     
     game.players["troido"].health = 25
     
-    options = game.get_options("troido")
+    options = game.get_visible_data("troido")["options"]
     assert "Farm" in options
     assert not options["Farm"]["available"]
     assert "Bed" in options
@@ -53,7 +50,7 @@ def main():
     assert len(players) == 1
     assert players[0]["health"] == 75
     assert players[0]["coins"] == 10
-    options = game.get_options("troido")
+    options = game.get_visible_data("troido")["options"]
     assert "Farm" in options
     assert not options["Farm"]["available"]
     assert "Bed" in options
@@ -68,7 +65,7 @@ def main():
     assert len(players) == 1
     assert players[0]["health"] == 100
     assert players[0]["coins"] == 10
-    options = game.get_options("troido")
+    options = game.get_visible_data("troido")["options"]
     assert "Farm" in options
     assert options["Farm"]["available"]
     assert "Bed" in options
@@ -84,11 +81,13 @@ def main():
     assert len(players) == 1
     assert players[0]["health"] == 100
     assert players[0]["coins"] == 10
-    options = game.get_options("troido")
+    options = game.get_visible_data("troido")["options"]
     assert "Farm" in options
     assert options["Farm"]["available"]
     assert "Bed" in options
     assert options["Bed"]["available"]
+    
+    print("done")
     
     
 
