@@ -5,21 +5,31 @@ import sys
 import json
 import re
 
+try:
+    from defaultgame import make_game
+except ImportError:
+    thisdir = os.path.dirname(__file__)
+    sys.path = [thisdir] + sys.path
+    from defaultgame import make_game
+
 from utils import write_safe
 
-from defaultgame import make_game
 from input import Input
 
-savefile = "data/save/save.json"
+savefile = "save/save.json"
 
-inputdir = "data/input/"
+inputdir = "input/"
 inputfilesuffix = ".input.txt"
 inputfnames = inputdir + "{}.input.txt"
 playername_extract = re.compile(inputdir + r'(\w+)' + inputfilesuffix)
 
-playerdatafiles = "data/players/{}.json"
+playerdatafiles = "players/{}.json"
 
 
+def get_data_dir():
+    if len(sys.argv) > 1 and sys.argv[-1] != "new":
+        return sys.argv[-1]
+    return os.environ.get("DAILY_ADVENTURE_DATA", "../data/")
 
 def load_save_data():
     with open(savefile, "r") as f:
@@ -33,7 +43,6 @@ def load_player_input(fname):
     if not fname.endswith(inputfilesuffix):
         return None
     match = playername_extract.match(fname)
-    print("match", match)
     if not match:
         return None
     name = match.group(1)
@@ -60,10 +69,13 @@ def load_inputs():
 
 def main():
     
+    print("")
     print("creating game")
     game = make_game()
     
-    if "new" not in sys.argv:
+    os.chdir(get_data_dir())
+    
+    if len(sys.argv) < 2 or sys.argv[1] != "new":
         print("loading saved game data")
         try:
             savedata = load_save_data()
@@ -74,7 +86,6 @@ def main():
     
     print("load player inputs")
     inputs = load_inputs()
-    print(inputs)
     
     print("update")
     game.day(inputs)
