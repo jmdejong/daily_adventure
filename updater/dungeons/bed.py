@@ -20,4 +20,4 @@ class Bed(Dungeon):
         oldhealth = player.health
         player.health = max(player.health, min(player.health + self.healing, player.maxhealth))
         healed = player.health - oldhealth
-        return "You rested this day and healed for {} health. Your current health is {}/{}".format(healed, player.health, player.maxhealth)
+        player.tell("You rested this day and healed for {} health. Your current health is {}/{}".format(healed, player.health, player.maxhealth))

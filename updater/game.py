@@ -69,7 +69,8 @@ class Game:
             "health": player.health,
             "maxhealth": player.maxhealth,
             "coins": player.coins,
-            "lvl": player.lvl}
+            "lvl": player.lvl,
+            "default": self.default_dungeon.name}
     
     def tell_player(playername, message):
         if playername not in self.players:

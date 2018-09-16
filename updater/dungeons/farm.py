@@ -21,4 +21,4 @@ class Farm(Dungeon):
     
     def enter(self, player):
         player.coins += self.wage
-        return "You worked on the farm and made {} coins. You now have {} coins".format(self.wage, player.coins)
+        player.tell("You worked on the farm and made {} coins. You now have {} coins".format(self.wage, player.coins))
