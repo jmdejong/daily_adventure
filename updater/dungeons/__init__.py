@@ -6,6 +6,7 @@ class Dungeon:
     name = None
     action = None
     description = None
+    difficulty = 0
     
     def get_action(self):
         return self.action
@@ -15,6 +16,9 @@ class Dungeon:
     
     def get_availability(self, player):
         return Dungeon.hidden
+    
+    def get_difficulty(self):
+        return self.difficulty
     
     def can_see(self, player):
         return not self.get_availability(player).hidden

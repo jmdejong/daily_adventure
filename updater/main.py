@@ -4,6 +4,7 @@ import os
 import sys
 import json
 import re
+import datetime
 
 try:
     from defaultgame import make_game
@@ -24,6 +25,7 @@ inputfnames = inputdir + "{}.input.txt"
 playername_extract = re.compile(inputdir + r'(\w+)' + inputfilesuffix)
 
 playerdatafiles = "players/{}.json"
+defaultdatafile = "defaultinfo.json"
 
 
 def get_data_dir():
@@ -70,6 +72,7 @@ def load_inputs():
 def main():
     
     print("")
+    print("Daily Adventure update. UTC time: {datetime}".format(datetime=datetime.datetime.utcnow()))
     print("creating game")
     game = make_game()
     
@@ -101,6 +104,9 @@ def main():
         data = json.dumps(game.get_visible_data(playername))
         os.makedirs(os.path.dirname(infofile), exist_ok=True)
         write_safe(infofile, data, mode=0o600)
+    
+    default_info = json.dumps(game.get_visible_data(None))
+    write_safe(defaultdatafile, default_info)
     
     print("clear input")
     try:

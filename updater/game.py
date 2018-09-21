@@ -54,7 +54,8 @@ class Game:
                     "action": dungeon.get_action(),
                     "description": dungeon.get_description(),
                     "available": player.can_enter(dungeon),
-                    "reason": dungeon.entry_reason(player)}
+                    "reason": dungeon.entry_reason(player),
+                    "difficulty": dungeon.get_difficulty()}
                 for dungeon in self.dungeons.values()
                 if player.can_see(dungeon)}
     
@@ -66,11 +67,12 @@ class Game:
         return {
             "options": self.get_options(player),
             "messages": player.get_messages(),
-            "health": player.health,
+            "health": int(player.health),
             "maxhealth": player.maxhealth,
             "coins": player.coins,
-            "lvl": player.lvl,
-            "default": self.default_dungeon.name}
+            "lvl": int(player.lvl),
+            "default": self.default_dungeon.name,
+            "inventory": player.inv}
     
     def tell_player(playername, message):
         if playername not in self.players:

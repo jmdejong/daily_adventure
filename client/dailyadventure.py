@@ -3,6 +3,7 @@
 import sys
 import os
 import json
+import subprocess
 #import argparse
 
 _dir = os.path.dirname(__file__)
@@ -26,11 +27,17 @@ For example `{command} do Bed` or `{command} do 0`""".format(command=commandname
 statustemplate = """
 health: {health} / {maxhealth}
 coins: {coins}
-inventory: []"""
+inventory: {inventory}"""
 
 
-with os.popen("./daclient printinfo", 'r') as infop:
-    info = json.load(infop)
+#with os.popen("./daclient printinfo", 'r') as infop:
+    #info = json.load(infop)
+infop = subprocess.run(["./daclient", "printinfo"], capture_output=True)
+if infop.returncode == 0:
+    info = json.loads(str(infop.stdout, "utf-8"))
+if infop.returncode == 2: # file doesn't exist
+    with open("data/defaultinfo.json", "r") as f:
+        info = json.load(f)
 
 with os.popen("./daclient printinput 2>/dev/null", 'r') as inputp:
     _inputs = inputp.read()
@@ -65,52 +72,36 @@ Possible actions:""" +"".join(
             name=name,
             title=option.get("action", ""),
             availability="[UNAVAILABLE]" if not option.get("available") else "",
-            description=option.get("description", ""))
+            description=option.get("description", "") if option.get("available") else option.get("reason"))
         for number, (name, option) in enumerate(sorted(info["options"].items())))
 
 messagestext = "\nMessages:" + "".join("\n    "+message for message in info["messages"])
 
 
 def set_input(inp):
+    print("")
     try:
-        option = sorted(info["options"].items())[int(inp)]
+        option = sorted(info["options"].keys())[int(inp)]
     except ValueError:
         option = inp
     if option not in info["options"] or not info["options"][option]["available"]:
-        print("warning: this action is not valid. The action will default to "+info["default"])
+        print("warning: this action is not valid or unavailable. The action will default to "+info["default"])
     inputstr = inputs[0] + '\n' + option
     with os.popen("./daclient setinput", "w") as inputp:
         inputp.write(inputstr)
+    if option in info["options"]:
+        print("action set to '{}': {}".format(option, info["options"][option]["action"]))
+    else:
+        print("action set to '{}'".format(option))
     
 
 def main():
-    #if sys.argv[1] == "_title"
-    #parser = argparse.ArgumentParser(description="Daily Adventure game (frontend)")
-    #parser.set_defaults(action="report")
-    #subparsers = parser.add_subparsers()
-    
-    #doparser = subparsers.add_parser("do")
-    #doparser.add_argument("input")
-    #doparser.set_defaults(action="do")
-    
-    #def _aap(name):
-        #subparser = subparsers.add_parser(name)
-        #subparser.set_defaults(action=name)
-    #_aap("welcome")
-    #_aap("status")
-    #_aap("messages")
-    #_aap("options")
-    #_aap("action")
-    #_aap("report")
-    ##parser.add_argument("action", nargs='?', default="status", choices=["welcome", "status", "messages", "options", "report"])
-    
-    #args = parser.parse_args()
-    
-    #action = args.action
-    if len(sys.argv) >= 3:
+    assert len(sys.argv) > 1
+    if len(sys.argv) > 2:
         action = sys.argv[2]
     else:
         action = "report"
+    
     if action == "welcome":
         print(welcometext)
     elif action == "status":
@@ -130,7 +121,12 @@ def main():
     elif action == "help" or action == "-h" or action == "--help":
         print(helptext)
     elif action == "do":
-        set_input(args.input)
+        if len(sys.argv) > 3:
+            set_input(sys.argv[3])
+        else:
+            print("missing input action. Run `{command} help` for help".format(command=commandname))
+    else:
+        print("invalid/unknown action. Run `{command} help` for help".format(command=commandname))
         
     
     print("")

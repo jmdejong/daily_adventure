@@ -4,13 +4,14 @@ import random
 from . import Dungeon
 
 
+
 class Farm(Dungeon):
     
     
-    name = "Farm"
+    name = "farm"
     action = "Work on farm"
-    wage = 10
-    description = "The farmer will pay you 10 coins if you work a day on {} farm".format(random.choice(["his", "her", "their"]))
+    wage = 5
+    description = "The farmer will pay you {} coins if you work a day on {} farm".format(wage, random.choice(["his", "her", "their"]))
     
     
     

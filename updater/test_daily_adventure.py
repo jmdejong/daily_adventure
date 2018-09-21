@@ -1,19 +1,20 @@
 #!/usr/bin/python3
 
+import pytest
 
 from game import Game
 from dungeons.farm import Farm
 from dungeons.bed import Bed
 from input import Input
 
-def main():
+def test_game():
     
     
-    game = Game([Farm(), Bed()], default_dungeon="Bed")
+    game = Game([Farm(), Bed()], default_dungeon="bed")
     
     
     
-    inp = Input("troido", "", "Farm")
+    inp = Input("troido", "", "farm")
     inputs = [inp]
     
     
@@ -25,21 +26,21 @@ def main():
     assert len(players) == 1
     assert players[0]["name"] == "troido"
     assert players[0]["health"] == 100
-    assert players[0]["coins"] == 10
+    assert players[0]["coins"] == Farm.wage
     options = game.get_visible_data("troido")["options"]
-    assert "Farm" in options
-    assert options["Farm"]["available"]
-    assert "Bed" in options
-    assert options["Bed"]["available"]
+    assert "farm" in options
+    assert options["farm"]["available"]
+    assert "bed" in options
+    assert options["bed"]["available"]
     
     
     game.players["troido"].health = 25
     
     options = game.get_visible_data("troido")["options"]
-    assert "Farm" in options
-    assert not options["Farm"]["available"]
-    assert "Bed" in options
-    assert options["Bed"]["available"]
+    assert "farm" in options
+    assert not options["farm"]["available"]
+    assert "bed" in options
+    assert options["bed"]["available"]
     
     
     game.day([])
@@ -49,12 +50,12 @@ def main():
     players = save["players"]
     assert len(players) == 1
     assert players[0]["health"] == 75
-    assert players[0]["coins"] == 10
+    assert players[0]["coins"] == Farm.wage
     options = game.get_visible_data("troido")["options"]
-    assert "Farm" in options
-    assert not options["Farm"]["available"]
-    assert "Bed" in options
-    assert options["Bed"]["available"]
+    assert "farm" in options
+    assert not options["farm"]["available"]
+    assert "bed" in options
+    assert options["bed"]["available"]
     
     
     game.day([inp])
@@ -64,15 +65,15 @@ def main():
     players = save["players"]
     assert len(players) == 1
     assert players[0]["health"] == 100
-    assert players[0]["coins"] == 10
+    assert players[0]["coins"] == Farm.wage
     options = game.get_visible_data("troido")["options"]
-    assert "Farm" in options
-    assert options["Farm"]["available"]
-    assert "Bed" in options
-    assert options["Bed"]["available"]
+    assert "farm" in options
+    assert options["farm"]["available"]
+    assert "bed" in options
+    assert options["bed"]["available"]
     
     
-    inp.dungeon = "Bed"
+    inp.dungeon = "bed"
     game.day([inp])
     
     save = game.save()
@@ -80,12 +81,12 @@ def main():
     players = save["players"]
     assert len(players) == 1
     assert players[0]["health"] == 100
-    assert players[0]["coins"] == 10
+    assert players[0]["coins"] == Farm.wage
     options = game.get_visible_data("troido")["options"]
-    assert "Farm" in options
-    assert options["Farm"]["available"]
-    assert "Bed" in options
-    assert options["Bed"]["available"]
+    assert "farm" in options
+    assert options["farm"]["available"]
+    assert "bed" in options
+    assert options["bed"]["available"]
     
     print("done")
     
@@ -93,5 +94,5 @@ def main():
 
 
 
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    pytest.main(['-v', '-x', '-s'])
