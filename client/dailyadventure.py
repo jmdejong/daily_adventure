@@ -32,9 +32,11 @@ inventory: {inventory}"""
 
 def read_process(args):
     p = subprocess.run(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-    return (p.returncode, str(p.stdout, "utf-8"), str(p.stderr, "utf-8"))
+    stdout = str(p.stdout, "utf-8") if p.stdout else ""
+    stderr = str(p.stderr, "utf-8") if p.stderr else ""
+    return (p.returncode, stdout, stderr)
 
-infoc, infos, infoerr = read_prrocess(["./daclient", "printinfo"])
+infoc, infos, infoerr = read_process(["./daclient", "printinfo"])
 if infoc == 0:
     info = json.loads(infos)
 elif infoc == 2: # file doesn't exist
@@ -43,9 +45,9 @@ elif infoc == 2: # file doesn't exist
 else:
     raise Exception(infoerr)
 
-inpc, inps, inperr = read_prrocess(["./daclient", "printinfo"])
+inpc, inps, inperr = read_process(["./daclient", "printinfo"])
 if inpc == 0:
-    _inputs = inps.read()
+    _inputs = inps
 else:
     _inputs = ""
 inputs = (_inputs + "\n\n").splitlines()[:2]
