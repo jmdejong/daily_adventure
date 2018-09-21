@@ -30,17 +30,24 @@ coins: {coins}
 inventory: {inventory}"""
 
 
-#with os.popen("./daclient printinfo", 'r') as infop:
-    #info = json.load(infop)
-infop = subprocess.run(["./daclient", "printinfo"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-if infop.returncode == 0:
-    info = json.loads(str(infop.stdout, "utf-8"))
-if infop.returncode == 2: # file doesn't exist
+def read_process(args):
+    p = subprocess.run(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    return (p.returncode, str(p.stdout, "utf-8"), str(p.stderr, "utf-8"))
+
+infoc, infos, infoerr = read_prrocess(["./daclient", "printinfo"])
+if infoc == 0:
+    info = json.loads(infos)
+elif infoc == 2: # file doesn't exist
     with open("data/defaultinfo.json", "r") as f:
         info = json.load(f)
+else:
+    raise Exception(infoerr)
 
-with os.popen("./daclient printinput 2>/dev/null", 'r') as inputp:
-    _inputs = inputp.read()
+inpc, inps, inperr = read_prrocess(["./daclient", "printinfo"])
+if inpc == 0:
+    _inputs = inps.read()
+else:
+    _inputs = ""
 inputs = (_inputs + "\n\n").splitlines()[:2]
 
 _action = inputs[1] or info["default"]
