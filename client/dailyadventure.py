@@ -32,7 +32,7 @@ inventory: {inventory}"""
 
 #with os.popen("./daclient printinfo", 'r') as infop:
     #info = json.load(infop)
-infop = subprocess.run(["./daclient", "printinfo"], capture_output=True)
+infop = subprocess.run(["./daclient", "printinfo"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 if infop.returncode == 0:
     info = json.loads(str(infop.stdout, "utf-8"))
 if infop.returncode == 2: # file doesn't exist
