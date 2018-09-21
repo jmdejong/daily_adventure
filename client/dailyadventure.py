@@ -10,7 +10,6 @@ _dir = os.path.dirname(__file__)
 if _dir:
     os.chdir(_dir)
 
-
 commandname = sys.argv[1]
 
 welcometext = """
@@ -31,7 +30,7 @@ inventory: {inventory}"""
 
 
 def read_process(args):
-    p = subprocess.run(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    p = subprocess.run(args, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     stdout = str(p.stdout, "utf-8") if p.stdout else ""
     stderr = str(p.stderr, "utf-8") if p.stderr else ""
     return (p.returncode, stdout, stderr)
@@ -44,7 +43,6 @@ elif infoc == 2: # file doesn't exist
         info = json.load(f)
 else:
     raise Exception(infoerr)
-
 inpc, inps, inperr = read_process(["./daclient", "printinfo"])
 if inpc == 0:
     _inputs = inps
