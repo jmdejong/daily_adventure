@@ -43,7 +43,7 @@ elif infoc == 2: # file doesn't exist
         info = json.load(f)
 else:
     raise Exception(infoerr)
-inpc, inps, inperr = read_process(["./daclient", "printinfo"])
+inpc, inps, inperr = read_process(["./daclient", "printinput"])
 if inpc == 0:
     _inputs = inps
 else:
