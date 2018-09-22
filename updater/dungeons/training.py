@@ -18,7 +18,7 @@ class Training(Dungeon):
         if "wooden sword" not in player.inv:
             return Dungeon.unavailable("You need a wooden sword to train at the combat school")
         if player.coins < self.cost:
-            return Dungeon.unavailable("You can't affor the combat school. You must pay "+self.cost+" coin per day")
+            return Dungeon.unavailable("You can't affor the combat school. You must pay {} coin{} per day".format(self.cost, "" if self.cost == 1 else "s"))
         if player.health < player.maxhealth:
             return Dungeon.unavailable("You need to be completely fit to train at the combat school. Give your wounds some rest")
         return Dungeon.available
