@@ -6,7 +6,7 @@ class Blacksmith(Dungeon):
     
     
     name = "blacksmith"
-    action = "Work for carpenter"
+    action = "Buy dagger"
     cost = 10
     description = "Buy a dagger from the blacksmith for {} coins".format(cost)
     
@@ -15,7 +15,7 @@ class Blacksmith(Dungeon):
     def get_availability(self, player):
         if "dagger" in player.inv or not "warrior diploma" in player.inv:
             return Dungeon.hidden
-        if player.coins < 1:
+        if player.coins < self.cost:
             return Dungeon.unavailable("You don't have enough money to buy a dagger. You need {} coins".format(self.cost))
         return Dungeon.available
     
