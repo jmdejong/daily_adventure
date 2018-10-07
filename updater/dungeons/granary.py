@@ -21,7 +21,7 @@ class Granary(Dungeon):
         return Dungeon.available
     
     def enter(self, player):
-        damage = max(random.normvariate(15, 5), 0)
+        damage = max(random.normalvariate(15, 5), 0)
         player.health -= damage
         if player.health <= 0:
             player.tell("You failed to defeat the rats; the rats defeated you! You don't get the reward. The farmer pities you and still gives you some coins")
