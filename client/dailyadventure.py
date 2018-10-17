@@ -14,6 +14,7 @@ commandname = sys.argv[1]
 
 welcometext = """
 Welcome to Daily Adventure
+This is just the MVP version. More content will be added later.
 You can set one action for the day. This will be executed at UTC midnight.
 You will then have to set a new command for the next day.
 Run `{command} help` for instructions""".format(command=commandname)
