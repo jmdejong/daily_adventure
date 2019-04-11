@@ -5,6 +5,8 @@
 #include <sys/stat.h>
 #include <errno.h>
 
+#include "paths.h"
+
 void printUsage(char *process){
     printf("Usage:\n  %s printinput\n  %s setinput\n  %s printinfo\nprintinput and printinfo will print to stdout.\nsetinput will read from stdin.\n", process, process, process);
 }
@@ -42,8 +44,6 @@ void writefile(char *filename){
 
 
 
-char inputfname[] = "data/input/%s.input.txt";
-
 
 void printInput(char *username){
     char fname[100];
@@ -57,7 +57,6 @@ void setInput(char *username){
     writefile(fname);
 }
 
-char infofname[] = "data/players/%s.json";
 
 void printInfo(char* username){
     char fname[100];
