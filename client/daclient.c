@@ -2,10 +2,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <sys/stat.h>
 #include <errno.h>
 
 #include "paths.h"
+
+#define PATH_SIZE 256
+#define USERNAME_MAX_LENGTH 128
 
 void printUsage(char *process){
     printf("Usage:\n  %s printinput\n  %s setinput\n  %s printinfo\nprintinput and printinfo will print to stdout.\nsetinput will read from stdin.\n", process, process, process);
@@ -46,20 +50,20 @@ void writefile(char *filename){
 
 
 void printInput(char *username){
-    char fname[100];
+    char fname[PATH_SIZE];
     sprintf(fname, inputfname, username);
     printfile(fname);
 }
 
 void setInput(char *username){
-    char fname[100];
+    char fname[PATH_SIZE];
     sprintf(fname, inputfname, username);
     writefile(fname);
 }
 
 
 void printInfo(char* username){
-    char fname[100];
+    char fname[PATH_SIZE];
     sprintf(fname, infofname, username);
     printfile(fname);
 }
@@ -70,8 +74,11 @@ int main(int argc, char *argv[]){
         printUsage(argv[0]);
         return 0;
     }
-    char username[80];
-    getlogin_r(username, 80);
+    char *username = getlogin();
+    if (strlen(username) > USERNAME_MAX_LENGTH){
+        fprintf(stderr, "Error: username too long.\nUsername is %lu characters while the max is %d characters.\nUsername is: %s", strlen(username), USERNAME_MAX_LENGTH, username);
+        exit(-1);
+    }
     char *command = argv[1];
     if (!strcmp(command, "printinput")){
         printInput(username);
