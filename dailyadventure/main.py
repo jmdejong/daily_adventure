@@ -4,18 +4,14 @@ import os
 import sys
 import json
 import re
-import datetime
+from datetime import datetime, timezone
+import logging
 
-try:
-    from defaultgame import make_game
-except ImportError:
-    thisdir = os.path.dirname(__file__)
-    sys.path = [thisdir] + sys.path
-    from defaultgame import make_game
+from .utils import write_safe
 
-from utils import write_safe
+from .input import Input
 
-from input import Input
+from .defaultgame import make_game
 
 savefile = "save/save.json"
 
@@ -31,7 +27,7 @@ defaultdatafile = "defaultinfo.json"
 def get_data_dir():
     if len(sys.argv) > 1 and sys.argv[-1] != "new":
         return sys.argv[-1]
-    return os.environ.get("DAILY_ADVENTURE_DATA", "../data/")
+    return os.environ.get("DAILY_ADVENTURE_DATA", os.path.join(os.path.dirname(__file__), "..", "data"))
 
 def load_save_data():
     with open(savefile, "r") as f:
@@ -46,13 +42,16 @@ def load_player_input(fname):
         return None
     match = playername_extract.match(fname)
     if not match:
+        logging.warning("could not get player name from file {}".format(fname))
         return None
     name = match.group(1)
     try:
         with open(fname, "r") as f:
             inp = f.read()
-    except OSError:
+    except OSError as e:
+        logging.warning("could not read input for player {} (file: {}): {}".format(name, fname, e))
         return None
+    logging.info("input for player {}:\n{}".format(name, inp))
     lines = inp.splitlines()[:2]
     return Input(name, *lines)
 
@@ -62,6 +61,7 @@ def load_inputs():
     try:
         inputfiles = [os.path.join(inputdir, fname) for fname in os.listdir(inputdir)]
     except OSError:
+        logging.warning("unable to load player inputs")
         inputfiles = []
     for fname in inputfiles:
         data = load_player_input(fname)
@@ -71,34 +71,41 @@ def load_inputs():
 
 def main():
     
-    print("")
-    print("Daily Adventure update. UTC time: {datetime}".format(datetime=datetime.datetime.utcnow()))
-    print("creating game")
+    os.chdir(get_data_dir())
+    os.makedirs("logs", exist_ok=True)
+    logging.basicConfig(
+        level=logging.DEBUG,
+        filename=os.path.join(
+            "logs",
+            datetime.utcnow().isoformat(timespec="seconds") + ".log"))
+    logging.getLogger('').addHandler(logging.StreamHandler())
+    
+    logging.info("Daily Adventure update. UTC time: {datetime}".format(datetime=datetime.utcnow()))
+    logging.info("creating game")
     game = make_game()
     
-    os.chdir(get_data_dir())
     
     if len(sys.argv) < 2 or sys.argv[1] != "new":
-        print("loading saved game data")
+        logging.info("loading saved game data")
         try:
             savedata = load_save_data()
         except OSError:
-            print("Unable to open save. Make sure the savefile exist as {} or create a new save with `{} new`".format(savefile, sys.argv[0]), file=sys.stderr)
-            return
+            logging.error("Unable to open save. Make sure the savefile exist as {} or create a new save with `{} new`".format(savefile, sys.argv[0]))
+            raise
         game.load(savedata)
     
-    print("load player inputs")
+    logging.info("load player inputs")
     inputs = load_inputs()
     
-    print("update")
+    logging.info("update")
     game.day(inputs)
     
-    print("save game data")
+    logging.info("save game data")
     savedata = json.dumps(game.save())
     os.makedirs(os.path.dirname(savefile), exist_ok=True)
     write_safe(savefile, savedata, mode=0o600)
     
-    print("inform players")
+    logging.info("inform players")
     for playername in game.players:
         infofile = playerdatafiles.format(playername)
         data = json.dumps(game.get_visible_data(playername))
@@ -108,7 +115,7 @@ def main():
     default_info = json.dumps(game.get_visible_data(None))
     write_safe(defaultdatafile, default_info)
     
-    print("clear input")
+    logging.info("clear input")
     try:
         os.makedirs(inputdir, exist_ok=True)
         inputfiles = os.listdir(inputdir)
@@ -117,13 +124,6 @@ def main():
     for fname in inputfiles:
         os.remove(os.path.join(inputdir, fname))
     
-    print("done")
-    print("")
-    
-    
+    logging.info("done")
+    print("updated successfully")
 
-
-
-if __name__ == "__main__":
-    os.chdir(os.path.dirname(__file__))
-    main()

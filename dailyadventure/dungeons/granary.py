@@ -1,6 +1,8 @@
 
-from . import Dungeon
 import random
+
+from . import Dungeon
+from dailyadventure.items import items
 
 _wage = 30
 
@@ -14,7 +16,7 @@ class Granary(Dungeon):
     
     
     def get_availability(self, player):
-        if not "dagger" in player.inv:
+        if not player.inv.has(items.dagger):
             return Dungeon.hidden
         if player.health < player.maxhealth:
             return Dungeon.unavailable("You need to be completely fit to fight rats. Give your wounds some rest")

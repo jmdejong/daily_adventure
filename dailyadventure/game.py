@@ -64,15 +64,7 @@ class Game:
             player = self.players[playername]
         else:
             player = Player(playername)
-        return {
-            "options": self.get_options(player),
-            "messages": player.get_messages(),
-            "health": int(player.health),
-            "maxhealth": player.maxhealth,
-            "coins": player.coins,
-            "lvl": int(player.lvl),
-            "default": self.default_dungeon.name,
-            "inventory": player.inv}
+        return player.view(self)
     
     def tell_player(playername, message):
         if playername not in self.players:

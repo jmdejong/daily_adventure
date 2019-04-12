@@ -1,6 +1,7 @@
 
 
 from . import Dungeon
+from dailyadventure.items import items
 
 class Blacksmith(Dungeon):
     
@@ -13,7 +14,7 @@ class Blacksmith(Dungeon):
     
     
     def get_availability(self, player):
-        if "dagger" in player.inv or not "warrior diploma" in player.inv:
+        if player.inv.has(items.dagger) or not player.inv.has(items.warrior_diploma):
             return Dungeon.hidden
         if player.coins < self.cost:
             return Dungeon.unavailable("You don't have enough money to buy a dagger. You need {} coins".format(self.cost))

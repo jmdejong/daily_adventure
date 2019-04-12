@@ -1,6 +1,8 @@
 
-from . import Dungeon
 import random
+
+from . import Dungeon
+from dailyadventure.items import items
 
 
 class Training(Dungeon):
@@ -13,12 +15,12 @@ class Training(Dungeon):
     
     
     def get_availability(self, player):
-        if "warrior diploma" in player.inv and player.lvl >= 1:
+        if player.inv.has(items.warrior_diploma) and player.lvl >= 1:
             return Dungeon.hidden
-        if "wooden sword" not in player.inv:
+        if not player.inv.has(items.wooden_sword):
             return Dungeon.unavailable("You need a wooden sword to train at the combat school")
         if player.coins < self.cost:
-            return Dungeon.unavailable("You can't affor the combat school. You must pay {} coin{} per day".format(self.cost, "" if self.cost == 1 else "s"))
+            return Dungeon.unavailable("You can't affort the combat school. You must pay {} coin{} per day".format(self.cost, "" if self.cost == 1 else "s"))
         if player.health < player.maxhealth:
             return Dungeon.unavailable("You need to be completely fit to train at the combat school. Give your wounds some rest")
         return Dungeon.available
@@ -26,7 +28,7 @@ class Training(Dungeon):
     def enter(self, player):
         player.coins -= self.cost
         if player.lvl >= 1:
-            player.inv.append("warrior diploma")
+            player.inv.add(items.warrior_diploma)
             player.tell("You are already a warrior. After a brief exam the trainers agreed to give you a warrior diploma")
             return
         
@@ -43,6 +45,6 @@ class Training(Dungeon):
         if player.lvl < 1:
             player.tell("You trained hard and learned a lot, but you weren't able to pass the warrior exam. Try again soon! Your effort is not lost!")
         else:
-            player.inv.append("warrior diploma")
+            player.inv.add(items.warrior_diploma)
             player.tell("You passed the warrior exam! Congratulations! You have received a warrior diploma")
             player.tell("Level up! You are now level 1")

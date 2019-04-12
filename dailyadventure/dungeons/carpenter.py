@@ -2,6 +2,7 @@
 import random
 
 from . import Dungeon
+from dailyadventure.items import items
 
 
 class Carpenter(Dungeon):
@@ -14,7 +15,7 @@ class Carpenter(Dungeon):
     
     
     def get_availability(self, player):
-        if "wooden sword" in player.inv:
+        if player.inv.has(items.wooden_sword):
             return Dungeon.hidden
             
         if player.health < player.maxhealth:
@@ -22,5 +23,5 @@ class Carpenter(Dungeon):
         return Dungeon.available
     
     def enter(self, player):
-        player.inv.append("wooden sword")
+        player.inv.add(items.wooden_sword)
         player.tell("You worked for the carpenter and were rewarded a wooden training sword")

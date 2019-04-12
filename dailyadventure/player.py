@@ -33,6 +33,17 @@ class Player:
     def get_messages(self):
         return self.messages
     
+    def view(self, game):
+        return {
+            "options": game.get_options(self),
+            "messages": self.get_messages(),
+            "health": int(self.health),
+            "maxhealth": self.maxhealth,
+            "coins": self.coins,
+            "lvl": int(self.lvl),
+            "default": game.default_dungeon.name,
+            "inventory": self.inv.view()}
+    
     def save(self):
         return {
             "name": self.name,
