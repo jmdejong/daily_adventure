@@ -2,10 +2,10 @@
 
 import pytest
 
-from game import Game
-from dungeons.farm import Farm
-from dungeons.bed import Bed
-from input import Input
+from .game import Game
+from .dungeons.farm import Farm
+from .dungeons.bed import Bed
+from .input import Input
 
 def test_game():
     

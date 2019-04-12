@@ -1,4 +1,5 @@
 
+from .inventory import Inventory
 
 class Player:
     
@@ -7,7 +8,7 @@ class Player:
         self.name = name
         
         self.lvl = 0
-        self.inv = []
+        self.inv = Inventory()
         self.maxhealth = 100
         self.health = self.maxhealth
         self.coins = 0
@@ -36,7 +37,7 @@ class Player:
         return {
             "name": self.name,
             "lvl": self.lvl,
-            "inv": self.inv,
+            "inv": self.inv.save(),
             "health": self.health,
             "maxhealth": self.maxhealth,
             "coins": self.coins}
@@ -44,7 +45,7 @@ class Player:
     @classmethod
     def load(cls, data):
         p = Player(data["name"])
-        p.inv = data["inv"]
+        p.inv = Inventory(data["inv"])
         p.lvl = data["lvl"]
         p.maxhealth = data["maxhealth"]
         p.health = data["health"]
