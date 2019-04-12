@@ -1,2 +1,4 @@
 data
 daclient
+*.o
+paths.h
