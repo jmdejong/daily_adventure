@@ -6,6 +6,7 @@ import json
 import re
 from datetime import datetime, timezone
 import logging
+from argparse import ArgumentParser
 
 from .utils import write_safe
 
@@ -25,8 +26,6 @@ defaultdatafile = "defaultinfo.json"
 
 
 def get_data_dir():
-    if len(sys.argv) > 1 and sys.argv[-1] != "new":
-        return sys.argv[-1]
     return os.environ.get("DAILY_ADVENTURE_DATA", os.path.join(os.path.dirname(__file__), "..", "data"))
 
 def load_save_data():
@@ -69,9 +68,22 @@ def load_inputs():
             inputs.append(data)
     return inputs
 
+NEW = "new"
+UPDATE = "update"
+REFRESH = "refresh"
+
 def main():
+    parser = ArgumentParser()
+    parser.add_argument("action", choices=[NEW, UPDATE, REFRESH])
+    parser.add_argument("--data-path")
+    args = parser.parse_args()
     
-    os.chdir(get_data_dir())
+    if args.data_path is not None:
+        data_dir = args.data_path
+    else:
+        data_dir = get_data_dir()
+    os.chdir(data_dir)
+    
     os.makedirs("logs", exist_ok=True)
     logging.basicConfig(
         level=logging.DEBUG,
@@ -85,7 +97,7 @@ def main():
     game = make_game()
     
     
-    if len(sys.argv) < 2 or sys.argv[1] != "new":
+    if len(sys.argv) < 2 or args.action != NEW:
         logging.info("loading saved game data")
         try:
             savedata = load_save_data()
@@ -94,11 +106,12 @@ def main():
             raise
         game.load(savedata)
     
-    logging.info("load player inputs")
-    inputs = load_inputs()
-    
-    logging.info("update")
-    game.day(inputs)
+    if args.action != REFRESH:
+        logging.info("load player inputs")
+        inputs = load_inputs()
+        
+        logging.info("update")
+        game.day(inputs)
     
     logging.info("save game data")
     savedata = json.dumps(game.save())
@@ -115,14 +128,16 @@ def main():
     default_info = json.dumps(game.get_visible_data(None))
     write_safe(defaultdatafile, default_info)
     
-    logging.info("clear input")
-    try:
-        os.makedirs(inputdir, exist_ok=True)
-        inputfiles = os.listdir(inputdir)
-    except OSError:
-        inputfiles = []
-    for fname in inputfiles:
-        os.remove(os.path.join(inputdir, fname))
+    
+    if args.action != REFRESH:
+        logging.info("clear input")
+        try:
+            os.makedirs(inputdir, exist_ok=True)
+            inputfiles = os.listdir(inputdir)
+        except OSError:
+            inputfiles = []
+        for fname in inputfiles:
+            os.remove(os.path.join(inputdir, fname))
     
     logging.info("done")
     print("updated successfully")
