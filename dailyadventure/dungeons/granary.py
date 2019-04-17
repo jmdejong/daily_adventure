@@ -27,7 +27,7 @@ class Granary(Dungeon):
         player.health -= damage
         if player.health <= 0:
             player.tell("You failed to defeat the rats; the rats defeated you! You don't get the reward. The farmer pities you and still gives you some coins")
-            player.coins += 2
+            player.inv.add(items.coins, 2)
         else:
-            player.coins += self.wage
+            player.inv.add(items.coins, self.wage)
             player.tell("You worked on the farm and made {} coins. You now have {} coins".format(self.wage, player.coins))

@@ -39,10 +39,10 @@ class Player:
             "messages": self.get_messages(),
             "health": int(self.health),
             "maxhealth": self.maxhealth,
-            "coins": self.coins,
             "lvl": int(self.lvl),
             "default": game.default_dungeon.name,
-            "inventory": self.inv.view()}
+            "inventory": self.inv.view()
+        }
     
     def save(self):
         return {
@@ -50,8 +50,8 @@ class Player:
             "lvl": self.lvl,
             "inv": self.inv.save(),
             "health": self.health,
-            "maxhealth": self.maxhealth,
-            "coins": self.coins}
+            "maxhealth": self.maxhealth
+        }
     
     @classmethod
     def load(cls, data):
@@ -60,5 +60,6 @@ class Player:
         p.lvl = data["lvl"]
         p.maxhealth = data["maxhealth"]
         p.health = data["health"]
-        p.coins = data["coins"]
+        if "coins" in data and not isinstance(data["inv"].get("coins"), int):
+            p.inv.add("coins", data["coins"])
         return p

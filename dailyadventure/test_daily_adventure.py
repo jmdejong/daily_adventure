@@ -26,7 +26,7 @@ def test_game():
     assert len(players) == 1
     assert players[0]["name"] == "troido"
     assert players[0]["health"] == 100
-    assert players[0]["coins"] == Farm.wage
+    assert players[0]["inv"]["coins"] == Farm.wage
     options = game.get_visible_data("troido")["options"]
     assert "farm" in options
     assert options["farm"]["available"]
@@ -50,7 +50,7 @@ def test_game():
     players = save["players"]
     assert len(players) == 1
     assert players[0]["health"] == 75
-    assert players[0]["coins"] == Farm.wage
+    assert players[0]["inv"]["coins"] == Farm.wage
     options = game.get_visible_data("troido")["options"]
     assert "farm" in options
     assert not options["farm"]["available"]
@@ -65,7 +65,7 @@ def test_game():
     players = save["players"]
     assert len(players) == 1
     assert players[0]["health"] == 100
-    assert players[0]["coins"] == Farm.wage
+    assert players[0]["inv"]["coins"] == Farm.wage
     options = game.get_visible_data("troido")["options"]
     assert "farm" in options
     assert options["farm"]["available"]
@@ -81,7 +81,7 @@ def test_game():
     players = save["players"]
     assert len(players) == 1
     assert players[0]["health"] == 100
-    assert players[0]["coins"] == Farm.wage
+    assert players[0]["inv"]["coins"] == Farm.wage
     options = game.get_visible_data("troido")["options"]
     assert "farm" in options
     assert options["farm"]["available"]

@@ -19,6 +19,9 @@ class Inventory:
     def has(self, item, amount=1):
         return self.items.get(item, 0) >= amount
     
+    def get(self, item):
+        return self.items.get(item, 0)
+    
     def remove(self, item, amount=1):
         self.items[item] = self.items.get(item, 0) - amount
     

@@ -10,16 +10,20 @@ class ItemSpace:
 
 def _make_items(data):
     itemdict = {}
-    for id, attributes in data.items():
-        item = Item(id, *attributes)
-        itemdict[id] = item
+    for d in data:
+        if isinstance(d, str):
+            item = Item(d)
+        else:
+            item = Item(*d)
+        itemdict[item.id] = item
     return itemdict
 
-_itemdata = {
-    "dagger": (),
-    "warrior_diploma": (),
-    "wooden_sword": ()
-}
+_itemdata = [
+    "coins",
+    "dagger",
+    "warrior_diploma",
+    "wooden_sword"
+]
 
 
 _conversion = {
