@@ -19,14 +19,14 @@ class Training(Dungeon):
             return Dungeon.hidden
         if not player.inv.has(items.wooden_sword):
             return Dungeon.unavailable("You need a wooden sword to train at the combat school")
-        if not player.inv.has(item.coins, self.cost):
+        if not player.inv.has(items.coins, self.cost):
             return Dungeon.unavailable("You can't affort the combat school. You must pay {} coin{} per day".format(self.cost, "" if self.cost == 1 else "s"))
         if player.health < player.maxhealth:
             return Dungeon.unavailable("You need to be completely fit to train at the combat school. Give your wounds some rest")
         return Dungeon.available
     
     def enter(self, player):
-        player.coins.remove(item.coins, self.cost)
+        player.inv.remove(items.coins, self.cost)
         if player.lvl >= 1:
             player.inv.add(items.warrior_diploma)
             player.tell("You are already a warrior. After a brief exam the trainers agreed to give you a warrior diploma")

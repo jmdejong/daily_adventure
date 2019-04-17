@@ -13,14 +13,14 @@ class WoodMarket(Dungeon):
     
     
     def get_availability(self, player):
-        if player.inv.has(items.firewood, inv_price):
+        if player.inv.has(items.firewood, self.inv_price):
             return Dungeon.available
         else:
             return Dungeon.hidden
     
     
     def enter(self, player):
-        sales = min(random.randrange(20, 80), player.inv.get(items.firewood) // inv_price)
-        player.inv.remove(items.firewood, sales * inv_price)
+        sales = min(random.randrange(20, 80), player.inv.get(items.firewood) // self.inv_price)
+        player.inv.remove(items.firewood, sales * self.inv_price)
         player.inv.add(items.coins, sales)
-        player.tell("You sold {} firewood for {} coins in total.".format(sales * inv_price, sales))
+        player.tell("You sold {} firewood for {} coins in total.".format(sales * self.inv_price, sales))

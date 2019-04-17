@@ -22,7 +22,9 @@ _itemdata = [
     "coins",
     "dagger",
     "warrior_diploma",
-    "wooden_sword"
+    "wooden_sword",
+    "firewood",
+    "stick"
 ]
 
 

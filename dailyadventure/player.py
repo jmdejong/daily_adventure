@@ -1,5 +1,6 @@
 
 from .inventory import Inventory
+from .items import items
 
 class Player:
     
@@ -61,5 +62,5 @@ class Player:
         p.maxhealth = data["maxhealth"]
         p.health = data["health"]
         if "coins" in data and not isinstance(data["inv"].get("coins"), int):
-            p.inv.add("coins", data["coins"])
+            p.inv.add(items.coins, data["coins"])
         return p

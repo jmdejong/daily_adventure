@@ -26,8 +26,12 @@ For example `{command} do Bed` or `{command} do 0`""".format(command=commandname
 
 statustemplate = """
 health: {health} / {maxhealth}
-coins: {coins}
-inventory: {inventory}"""
+inventory:
+    {inventory}"""
+
+inventory_order = [
+    "Coins"
+]
 
 
 def read_process(args):
@@ -67,11 +71,20 @@ selected action: {action}{actionvalid}""".format(
     action=action,
     actionvalid=invalidactionwarning if not action_valid else "")
 
+_inv = info.get("inventory", [])
+_inv_dict = dict(_inv)
+inventory = []
+for item in inventory_order:
+    inventory.append((item, _inv_dict.get(item, 0)))
+for item, num in _inv:
+    if item not in inventory_order:
+        inventory.append((item, num))
+
 statustext = statustemplate.format(
     health=info["health"],
     maxhealth=info["maxhealth"],
-    coins=info["coins"],
-    inventory=info.get("inventory", []))
+    inventory="\n    ".join("{}: {}".format(item, num) for item, num in inventory)
+)
 
 optiontext = """
 Possible actions:""" +"".join(

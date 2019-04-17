@@ -1,5 +1,6 @@
 
 from .items import get_item
+from .item import Item
 
 class Inventory:
     
@@ -14,6 +15,7 @@ class Inventory:
         self.items = {get_item(name): num for name, num in items.items()}
     
     def add(self, item, amount=1):
+        assert isinstance(item, Item)
         self.items[item] = self.items.get(item, 0) + amount
     
     def has(self, item, amount=1):
