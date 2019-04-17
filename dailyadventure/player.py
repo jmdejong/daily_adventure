@@ -61,6 +61,6 @@ class Player:
         p.lvl = data["lvl"]
         p.maxhealth = data["maxhealth"]
         p.health = data["health"]
-        if "coins" in data and not isinstance(data["inv"].get("coins"), int):
+        if "coins" in data and not p.inv.has(items.coins):
             p.inv.add(items.coins, data["coins"])
         return p
