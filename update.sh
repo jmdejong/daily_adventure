@@ -2,4 +2,4 @@
 
 cd `dirname $0`
 
-python -m dailyadventure update>> da.stdout.log 2>>da.stderr.log
+python3 -m dailyadventure update>> da.stdout.log 2>>da.stderr.log
