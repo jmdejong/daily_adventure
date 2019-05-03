@@ -23,4 +23,4 @@ class Farm(Dungeon):
     
     def enter(self, player):
         player.inv.add(items.coins, self.wage)
-        player.tell("You worked on the farm and made {} coins. You now have {} coins".format(self.wage, player.coins))
+        player.tell("You worked on the farm and made {} coins.".format(self.wage))

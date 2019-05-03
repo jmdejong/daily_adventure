@@ -30,4 +30,4 @@ class Granary(Dungeon):
             player.inv.add(items.coins, 2)
         else:
             player.inv.add(items.coins, self.wage)
-            player.tell("You worked on the farm and made {} coins. You now have {} coins".format(self.wage, player.coins))
+            player.tell("You defeated the rats! The farmer gives you the reward of {} coins.".format(self.wage))
