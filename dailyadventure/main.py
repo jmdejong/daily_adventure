@@ -140,5 +140,5 @@ def main():
             os.remove(os.path.join(inputdir, fname))
     
     logging.info("done")
-    print("updated successfully")
+    #print("updated successfully")
 

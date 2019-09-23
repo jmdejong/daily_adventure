@@ -21,6 +21,6 @@ class Blacksmith(Dungeon):
         return Dungeon.available
     
     def enter(self, player):
-        player.inv.add("dagger")
+        player.inv.add(items.dagger)
         player.inv.remove(items.coins, self.cost)
         player.tell("You bought a dagger for from the blacksmith for {} coins. You spent the rest of the day practicing with your new weapon".format(self.cost))
